@@ -14,7 +14,7 @@ HashMap<K, V>::HashMap() {
     _size = 0;
     _real_size = 0;
     _hash_function = std::hash<K>();
-    Node<K, V> **tmp = new Node<K, V>*[5];
+    Node<K, V> **tmp = new Node<K, V>*[10];
     _hash_map = tmp;
     for (int i = 0; i < _max_size; i++) {
         _hash_map[i] = nullptr;
@@ -88,6 +88,7 @@ void HashMap<K, V>::remove(const K &key) {
     index = _hash_function(key) % _max_size;
     for (int i = index; i < _max_size; i++) {
         if (_hash_map[index]->key == key) {
+            delete _hash_map[index];
             _hash_map[index] = nullptr;
             _real_size--;
             _size--;
@@ -115,13 +116,6 @@ HashMap<K, V>& HashMap<K, V>::operator<<(const K &key) {
             _size++;
             _real_size++;
             return *this;
-        } else {
-            if (_hash_map[index] != nullptr) {
-                if (_hash_map[index]->key == key){
-                    _hash_map[index]->value += 1;
-                    return *this;
-                }
-            }
         }
     }
     return *this;
